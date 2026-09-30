@@ -4,8 +4,6 @@ const path = require('path');
 const crypto = require('crypto');
 
 const ROOT = __dirname;
-const PORT = 8080;
-const HOST = '127.0.0.1';
 const DATA_DIR = path.join(ROOT, 'data');
 const CONTENT_FILE = path.join(DATA_DIR, 'site-content.json');
 const ENV_FILE = path.join(ROOT, '1.env');
@@ -20,6 +18,10 @@ function readEnvValue(name) {
   }
 }
 
+const NODE_ENV = process.env.NODE_ENV || readEnvValue('NODE_ENV') || 'development';
+process.env.NODE_ENV = NODE_ENV;
+const PORT = Number(process.env.PORT || readEnvValue('PORT') || 8080);
+const HOST = process.env.HOST || readEnvValue('HOST') || (NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1');
 const ADMIN_PASSWORD = process.env.SMILIX_ADMIN_PASSWORD || readEnvValue('SMILIX_ADMIN_PASSWORD') || '1199';
 const sessions = new Set();
 const eventClients = new Set();
